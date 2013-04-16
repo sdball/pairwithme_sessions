@@ -5,25 +5,14 @@ module UglyTrivia
       @places = Array.new(6, 0)
       @purses = Array.new(6, 0)
       @in_penalty_box = Array.new(6, 0)
-
-      @pop_questions = []
-      @science_questions = []
-      @sports_questions = []
-      @rock_questions = []
-
+      @questions = {
+        'Pop' => 0,
+        'Science' => 0,
+        'Sports' => 0,
+        'Rock' => 0
+      }
       @current_player = 0
       @is_getting_out_of_penalty_box = false
-
-      50.times do |i|
-        @pop_questions.push "Pop Question #{i}"
-        @science_questions.push "Science Question #{i}"
-        @sports_questions.push "Sports Question #{i}"
-        @rock_questions.push create_rock_question(i)
-      end
-    end
-
-    def create_rock_question(index)
-      "Rock Question #{index}"
     end
 
     def is_playable?
@@ -55,8 +44,7 @@ module UglyTrivia
           @is_getting_out_of_penalty_box = true
 
           puts "#{@players[@current_player]} is getting out of the penalty box"
-          @places[@current_player] = @places[@current_player] + roll
-          @places[@current_player] = @places[@current_player] - 12 if @places[@current_player] > 11
+          @places[@current_player] = (@places[@current_player] + roll) % 12
 
           puts "#{@players[@current_player]}'s new location is #{@places[@current_player]}"
           puts "The category is #{current_category}"
@@ -68,8 +56,7 @@ module UglyTrivia
 
       else
 
-        @places[@current_player] = @places[@current_player] + roll
-        @places[@current_player] = @places[@current_player] - 12 if @places[@current_player] > 11
+        @places[@current_player] = (@places[@current_player] + roll) % 12
 
         puts "#{@players[@current_player]}'s new location is #{@places[@current_player]}"
         puts "The category is #{current_category}"
@@ -80,10 +67,9 @@ module UglyTrivia
   private
 
     def ask_question
-      puts @pop_questions.shift if current_category == 'Pop'
-      puts @science_questions.shift if current_category == 'Science'
-      puts @sports_questions.shift if current_category == 'Sports'
-      puts @rock_questions.shift if current_category == 'Rock'
+      return nil if @questions[current_category] > 50
+      puts "#{current_category} Question #{@questions[current_category]}"
+      @questions[current_category] += 1
     end
 
     def current_category
