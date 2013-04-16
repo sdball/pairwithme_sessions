@@ -15,10 +15,6 @@ module UglyTrivia
       @is_getting_out_of_penalty_box = false
     end
 
-    def is_playable?
-      how_many_players >= 2
-    end
-
     def add(player_name)
       @players.push player_name
       @places[how_many_players] = 0
